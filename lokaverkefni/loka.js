@@ -1,8 +1,7 @@
+const endpoint = "https://apis.is/concerts"; // næ i gögn
 
-const endpoint = "https://apis.is/concerts";
-
-let tonleikar = []
-let sortedevents = []
+let tonleikar = [] // tomt 
+let sortedevents = [] // tomt 
 
 fetch(endpoint)
     .then(result => result.json())
@@ -13,8 +12,8 @@ fetch(endpoint)
         data.results.forEach(concert => {
             console.log(concert);
             const card = document.createElement('div');
-            card.classList.add('card');
-
+            card.classList.add('card'); // næ i dalkana 
+            //img 
             const tmpImg = new Image(200);
             tmpImg.src = concert.imageSource;
 
@@ -31,8 +30,8 @@ fetch(endpoint)
             moment.locale('is')
             date.innerHTML = moment(concert.dateOfShow).format('lll');
 
-        card.dataset.title = concert.eventDateName;
-
+            card.dataset.title = concert.eventDateName;
+            //fara inn i divin
             containerWithin.appendChild(title);
             containerWithin.appendChild(name);
             containerWithin.appendChild(location);
@@ -44,36 +43,40 @@ fetch(endpoint)
             sortedevents.push(card);
             //container.appendChild(card);
         });
-	function compare(a, b) {
-      if (a.dataset.title < b.dataset.title)
-        return -1;
-      if (a.dataset.title > b.dataset.title)
-        return 1;
-      return 0;
-    }
-    sortedevents.sort(compare);
-    sortedevents.forEach(event => {
-      container.appendChild(event);
-    })
-	console.log(container.children)
-	tonleikar = Array.from(container.children)
-    });
 
+        function compare(a, b) {
+            if (a.dataset.title < b.dataset.title)
+                return -1;
+            if (a.dataset.title > b.dataset.title)
+                return 1;
+            return 0;
+        } //sotar mep titil eftir stafrósroð
+        sortedevents.sort(compare);
+        sortedevents.forEach(event => {
+            container.appendChild(event);
+        })
+        console.log(container.children)
+        tonleikar = Array.from(container.children)
+    });
+//search bar
 let searchinput = document.querySelector('#search-input')
 console.log(container.children)
-searchinput.addEventListener('keyup',function leita(e) {
-	console.log(e.target.value != '')
-		if (e.target.value != ''){
-			tonleikar.forEach(function (event) {
-				if(event.dataset.title.toLowerCase().includes(e.target.value.toLowerCase())){
-					event.style = 'display:block'
+searchinput.addEventListener('keyup', function leita(e) {
+    console.log(e.target.value != '') //ef ekki þa ......
+    if (e.target.value != '') {
+        tonleikar.forEach(function(event) {
+            if (event.dataset.title.toLowerCase().includes(e.target.value.toLowerCase())) {
+                event.style = 'display:block' // ef finnur þa synir hann það 
 
-				}else(event.style = 'display:none')
+            } else(event.style = 'display:none') // og ef ekki þa synir hann  það ekki
+            //console.log(event)
 
-				console.log(event)
-			})
-			
-		}
-		console.log(e.target.value)
+        })
 
+    } else {
+        tonleikar.forEach(function(concert) {
+            concert.style = "display:inherit";
+
+        });
+    }
 })
